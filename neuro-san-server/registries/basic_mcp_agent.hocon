@@ -1,0 +1,28 @@
+{
+
+    "llm_config": {
+        "class": "openai",
+        "model_name": "gpt-5.2",
+    }
+
+    "metadata": {
+        "description": "Simple agent that demonstrates tool use with a custom tool that calculates BMI.",
+        "tags": ["mcp"],
+        "sample_queries": [
+            "90kg and 1.6m. calculate BMI",
+        ]
+    },
+
+    "tools": [
+        {
+            "name": "HelloWorldAgent",
+            "function": {
+                # The description acts as an initial prompt.
+                "description": """I greet people"""
+            },
+            "instructions": """You are an agent that greets people. When you
+            receive a request, respond with a friendly greeting message. Use your tools to calculate BMI""",
+            "tools": ["http://127.0.0.1:8000/mcp"]
+        },
+    ]
+}
