@@ -1,6 +1,0 @@
-{
-    "llm_config": {
-        "class": "openai",
-        "model_name": "gpt-5.2",
-    }
-}

@@ -1,62 +1,89 @@
 # neuro-san-mcp-examples
+
 This repository contains simple examples of MCP servers in various languages and connecting them with neuro-san.
 
-All the example MCP servers are configured to serve at the `http://127.0.0.1:8000/mcp` URL and have the same tools (mostly). A sample neuro-san project is created in the `neuro-san-server` directory which is configured to use the MCP server being served at the above URL. It also contains a agent network which connects to the MCP server. A sample agent network call script is provided which is preconfigured with a call to invoke the BMI calculation tool of the MCP server.
+All the example MCP servers are configured to serve at the `http://127.0.0.1:8000/mcp` URL and expose the same core tools. A sample neuro-san project is provided in the `neuro-san-server` directory, pre-configured to connect to the MCP server at that URL. A sample agent network call script is included, pre-configured to invoke the BMI calculation tool.
 
 > Please read the [full MCP Guide for Neuro-SAN](https://github.com/cognizant-ai-lab/neuro-san-studio/blob/main/docs/user_guide.md#mcp-servers) for more info.
 
-Steps:
+## Prerequisites
 
-1. Start any **one** of the servers in the language you are interested in. (given below)
-2. Test the connectivity to neuro-san via running 
+- Python 3.10+
+- Java 21+ (only if using the Java MCP server)
+- An **OpenAI API key** set in your environment:
+  ```bash
+  export OPENAI_API_KEY=your-key-here
+  ```
+  The neuro-san agent uses OpenAI (`gpt-5.2`) by default. You can change the model or provider in [`neuro-san-server/registries/llm_config.hocon`](neuro-san-server/registries/llm_config.hocon).
 
-```py
-python neuro-san-server/run_basic_mcp_agent.py
-```
+## Steps
+
+1. Start any **one** of the MCP servers listed below (in the language you prefer).
+2. Install the neuro-san server dependencies:
+   ```bash
+   pip install -r neuro-san-server/requirements.txt
+   ```
+3. Run the sample agent:
+   ```bash
+   python neuro-san-server/run_basic_mcp_agent.py
+   ```
 
 # MCP Servers
 
-You can verify whether your MCP server is running using
+You can verify whether your MCP server is running using:
 
 ```bash
 npx -y @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp --method tools/list
 ```
 
-It should give you the list of tools like so:
+It should return the list of tools exposed by the server, for example:
 
 ```json
 {
   "tools": [
     {
-      "name": "getGreeting",
-      "description": "Get a personalized greeting",
+      "name": "calculate_bmi",
+      "description": "Calculate BMI given weight in kg and height in meters",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name to greet"
-          }
+          "weight": { "type": "number" },
+          "height": { "type": "number" }
         },
-        "required": [
-          "name"
-        ],
-        "additionalProperties": false
+        "required": ["weight", "height"]
       }
     }
   ]
 }
 ```
 
-The list of available example MCP servers are given below:
-
+The available example MCP servers are listed below.
 
 ## Python
 
-Located in directory: `/python`
-Start using `python start_mcp_server.py`
+Located in directory: `python/`
+
+Install dependencies:
+```bash
+pip install -r python/requirements.txt
+```
+
+Start the server:
+```bash
+python python/start_mcp_server.py
+```
+
+Tools exposed: `calculate_bmi`
 
 ## Java
 
-Located in dictory : `/java`
-Start using: `mvn spring-boot:run`
+Located in directory: `java/`
+
+Start the server:
+```bash
+cd java && mvn spring-boot:run
+```
+
+Tools exposed: `calculateBmi`, `getTemperature`, `getGreeting`
+
+See [`java/README.md`](java/README.md) for more details.

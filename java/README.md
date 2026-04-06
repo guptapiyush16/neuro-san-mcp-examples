@@ -23,7 +23,7 @@ The MCP endpoint is available at `POST /mcp`.
 
 ```bash
 cd java
-mvp spring-boot:run
+mvn spring-boot:run
 ```
 
 The server starts on **port 8000** by default.
